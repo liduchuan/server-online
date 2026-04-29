@@ -1,11 +1,28 @@
-interface Server {
+export interface ServerItem {
   name: string;
-  site: string;
+  website: string;
 }
 
-export const server: Server[] = [
+export interface ServerOnlineItem {
+  name: string;
+  website: string;
+  online: boolean;
+  statusCode: number | null;
+  error: string | null;
+  checkedAt: string;
+}
+
+export const server: ServerItem[] = [
   {
-    name: "Celhive Web DEV",
-    site: "https://www.celhive.ai",
+    name: "Celhive DEV 登录页面",
+    website: "https://www.celhive.ai/login",
+  },
+  {
+    name: "Juchats 登录页面",
+    website: "https://www.juchats.com/login",
+  },
+  {
+    name: "Lanobanana",
+    website: "https://lanobanana.com",
   },
 ];
