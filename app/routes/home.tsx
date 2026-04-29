@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardTitle,
   Chip,
   Link,
   ProgressBar,
@@ -36,15 +35,6 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     message: context.cloudflare.env.VALUE_FROM_CLOUDFLARE,
     serverList,
   };
-}
-
-function getInitials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
 }
 
 function getHostname(website: string) {
@@ -122,26 +112,19 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <main className="min-h-screen bg-[linear-gradient(180deg,#fff7f7_0%,#fff 22%,#f8fafc_100%)] px-4 py-6 text-foreground sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-5xl flex-col gap-4">
         <Surface className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_24px_60px_-36px_rgba(15,23,42,0.32)]">
-          <div className="flex flex-col gap-5 p-5 lg:p-6">
+          <div className="flex flex-col gap-4 p-5 lg:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Chip color="accent" variant="soft">
-                    Service Monitor
-                  </Chip>
-                  <Chip color={statusTone} variant="soft">
-                    {isLoadingOnline
-                      ? "Refreshing"
-                      : offlineCount === 0
-                        ? "Healthy"
-                        : `${offlineCount} issue${offlineCount > 1 ? "s" : ""}`}
-                  </Chip>
-                </div>
-                <div>
-                  <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                    Runtime status
-                  </h1>
-                </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+                  Runtime status
+                </h1>
+                <Chip color={statusTone} variant="soft">
+                  {isLoadingOnline
+                    ? "Refreshing"
+                    : offlineCount === 0
+                      ? "Healthy"
+                      : `${offlineCount} issue${offlineCount > 1 ? "s" : ""}`}
+                </Chip>
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <Chip variant="soft">{loaderData.message}</Chip>
@@ -234,14 +217,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         {failingServices.length > 0 ? (
           <Surface className="rounded-3xl border border-red-300 bg-red-50 shadow-[0_20px_40px_-32px_rgba(239,68,68,0.35)]">
             <div className="flex items-center justify-between gap-4 p-4">
-              <div>
-                <h2 className="text-lg font-semibold text-red-900">
-                  Needs immediate attention
-                </h2>
-                <p className="text-sm text-red-700">
-                  异常服务已自动提升到最前面。
-                </p>
-              </div>
+              <h2 className="text-base font-semibold text-red-900">
+                Needs immediate attention
+              </h2>
               <Chip color="danger" variant="soft">
                 {failingServices.length} failing
               </Chip>
@@ -260,7 +238,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               : isOnline
                 ? "Operational"
                 : "Unavailable";
-            const statusValue = !isResolved ? 20 : isOnline ? 100 : 18;
             const cardClassName = isOnline
               ? "border-slate-200 bg-white"
               : !isResolved
@@ -273,27 +250,16 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 className={`border shadow-sm ${cardClassName}`}
               >
                 <CardContent className="p-3">
-                  <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
-                    <div className="flex min-w-0 flex-1 items-center gap-3">
-                      <div className="min-w-0">
-                        <CardTitle className="truncate text-sm text-slate-950">
-                          {item.name}
-                        </CardTitle>
-                        <CardDescription className="truncate text-xs text-slate-500">
-                          {hostname}
-                        </CardDescription>
-                      </div>
+                  <div className="flex flex-col gap-2.5 md:flex-row md:items-center md:justify-between md:gap-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-slate-950">
+                        {item.name}
+                      </p>
+                      <CardDescription className="truncate text-xs text-slate-500">
+                        {hostname}
+                      </CardDescription>
                     </div>
-
-                    <div className="min-w-0 flex-1 lg:max-w-[260px]">
-                      <ProgressBar
-                        aria-label={`${item.name} health`}
-                        color={isOnline ? "success" : "danger"}
-                        value={statusValue}
-                      />
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2 lg:shrink-0">
+                    <div className="flex flex-wrap items-center gap-2 md:justify-end">
                       {!isResolved ? (
                         <Chip size="sm" variant="soft">
                           <span className="flex items-center gap-1.5">
@@ -323,6 +289,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                           </span>
                         )}
                       </Chip>
+                      <span className="hidden text-xs text-slate-400 md:inline">
+                        /
+                      </span>
                       <Link
                         href={item.website}
                         target="_blank"
