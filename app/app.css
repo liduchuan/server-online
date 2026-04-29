@@ -1,4 +1,5 @@
 @import "tailwindcss" source(".");
+@import "@heroui/styles/css";
 
 @theme {
 	--font-sans:
